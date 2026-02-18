@@ -1,0 +1,231 @@
+LX51 CODE BANKING LINKER/LOCATOR V05.01.21       05/09/24  15:33:03  PAGE  1
+WIN32 LX51 CODE BANKING LINKER/LOCATOR V05.01.21,  INVOKED BY:
+LX51 c:\users\nadth\onedrive\desktop\abcd\asd.obj TO(c:\users\nadth\onedrive\&
+desktop\abcd\myproject.AOF) PR(c:\users\nadth\onedrive\desktop\abcd\myproject&
+.m51) PW(80) XSIZE(65536) CSIZE(65536) RS(256) RSI(128) IX MAP 
+
+
+MEMORY MODEL: SMALL WITHOUT ANY FLOATING POINT ARITHMETIC
+
+
+INPUT MODULES INCLUDED
+  C:\USERS\NADTH\ONEDRIVE\DESKTOP\ABCD\ASD.OBJ(ASD)
+  c:\RIDE\Lib\RC51S.LIB(C3S)
+  c:\RIDE\Lib\RC51S.LIB(HPD)
+  c:\RIDE\Lib\RC51S.LIB(_C_IDATALEN)
+
+
+LINK MAP OF MODULE: C:\USERS\NADTH\ONEDRIVE\DESKTOP\ABCD\MYPROJECT.AOF (MYPROJE&
+CT)
+
+    TYPE     BASE       LENGTH    RELOCATION     SEGMENT NAME
+    ----     ----       ------    ----------     ------------
+
+    * * * * * * *   DATA/IDATA    M E M O R Y   * * * * * * *
+    REG      0000H      0008H     ABSOLUTE       "REG BANK 0"
+    DATA     0008H      0004H     UNIT           ?DT?ASD
+    DATA     000CH      0001H     UNIT           _DGROUP02_
+    IDATA    000DH      0001H     * * STACK * *  _STACK
+
+    * * * * * * *   CODE          M E M O R Y   * * * * * * *
+    CODE     0000H      0003H     ABSOLUTE       
+    CODE     0003H      0003H     ABSOLUTE       
+             0006H      0005H                    *** GAP ***
+    CODE     000BH      0003H     ABSOLUTE       
+    CODE     000EH      000FH     UNIT           ?PR?C51_STARTUP?
+    CODE     001DH      0010H     UNIT           ?PR?ASD
+    CODE     002DH      0015H     UNIT           ?PR?_Delay?ASD
+    CODE     0042H      002CH     UNIT           ?PR?int0_isr?ASD
+    CODE     006EH      003BH     UNIT           ?PR?int1_isr?ASD
+    CODE     00A9H      004AH     UNIT           ?PR?main?ASD
+
+EXECUTABLE SUMMARY:
+-------------------
+    Total INTERNAL RAM storage requirement:  000DH (13)
+    Total EXTERNAL RAM storage requirement:  0000H (0)
+    Total     CODE     storage requirement:  00EEH (238)
+Note:  Summary does not include dynamic stack requirements
+
+
+REFERENCE MAP OF MODULE: C:\USERS\NADTH\ONEDRIVE\DESKTOP\ABCD\MYPROJECT.AOF (MYPROJECT)
+
+SEGMENT                           BI_GROUP            DT_GROUP             ID_GROUP             XD_GROUP
+  +--> CALLED SEGMENT          START    LENGTH     START    LENGTH     START    LENGTH     START    LENGTH
+--------------------------------------------------------------------------------------
+
+?PR?int0_isr?ASD               ---------------     ---------------     ---------------     ---------------
+  +--> ?PR?_Delay?ASD
+
+?PR?_Delay?ASD                 ---------------     ---------------     ---------------     ---------------
+
+?PR?int1_isr?ASD               ---------------     ---------------     ---------------     ---------------
+  +--> ?PR?_Delay?ASD
+
+?PR?main?ASD                   ---------------     000CH    0001H      ---------------     ---------------
+
+SYMBOL TABLE FOR C:\USERS\NADTH\ONEDRIVE\DESKTOP\ABCD\MYPROJECT.AOF(ASD)
+-------------------------------------------------------------------------
+
+    VALUE              TYPE               NAME
+
+LX51 CODE BANKING LINKER/LOCATOR V05.01.21         05/09/24  15:33:03  PAGE  2
+    -----              ----               ----
+
+	-------            MODULE             asd
+	C:0000H            SYMBOL             _ICE_DUMMY_
+	C:00A9H            PUBLIC             main
+	C:006EH            PUBLIC             int1_isr
+	C:0042H            PUBLIC             int0_isr
+	C:002DH            PUBLIC             _Delay
+	C:001DH            PUBLIC             CodeSeg
+	D:000AH            PUBLIC             Counter
+	D:0008H            PUBLIC             Count
+	B:0095H            SYMBOL             CS_Seg1
+	B:0094H            SYMBOL             CS_Seg0
+	B:00C8H            SYMBOL             CP_RL2
+	B:00C9H            SYMBOL             C_T2
+	B:00CAH            SYMBOL             TR2
+	B:00CBH            SYMBOL             EXEN2
+	B:00CCH            SYMBOL             TCLK
+	B:00CDH            SYMBOL             RCLK
+	B:00CEH            SYMBOL             EXF2
+	B:00CFH            SYMBOL             TF2
+	B:0090H            SYMBOL             T2
+	B:0091H            SYMBOL             T2EX
+	B:00BDH            SYMBOL             PT2
+	B:00ADH            SYMBOL             ET2
+	B:0098H            SYMBOL             RI
+	B:0099H            SYMBOL             TI
+	B:009AH            SYMBOL             RB8
+	B:009BH            SYMBOL             TB8
+	B:009CH            SYMBOL             REN
+	B:009DH            SYMBOL             SM2
+	B:009EH            SYMBOL             SM1
+	B:009FH            SYMBOL             SM0
+	B:00B0H            SYMBOL             RXD
+	B:00B1H            SYMBOL             TXD
+	B:00B2H            SYMBOL             INT0
+	B:00B3H            SYMBOL             INT1
+	B:00B4H            SYMBOL             T0
+	B:00B5H            SYMBOL             T1
+	B:00B6H            SYMBOL             WR
+	B:00B7H            SYMBOL             RD
+	B:00B8H            SYMBOL             PX0
+	B:00B9H            SYMBOL             PT0
+	B:00BAH            SYMBOL             PX1
+	B:00BBH            SYMBOL             PT1
+	B:00BCH            SYMBOL             PS
+	B:00A8H            SYMBOL             EX0
+	B:00A9H            SYMBOL             ET0
+	B:00AAH            SYMBOL             EX1
+	B:00ABH            SYMBOL             ET1
+	B:00ACH            SYMBOL             ES
+	B:00AFH            SYMBOL             EA
+	B:0088H            SYMBOL             IT0
+	B:0089H            SYMBOL             IE0
+	B:008AH            SYMBOL             IT1
+	B:008BH            SYMBOL             IE1
+	B:008CH            SYMBOL             TR0
+	B:008DH            SYMBOL             TF0
+	B:008EH            SYMBOL             TR1
+	B:008FH            SYMBOL             TF1
+	B:00D0H            SYMBOL             P
+	B:00D1H            SYMBOL             F1
+	B:00D2H            SYMBOL             OV
+	B:00D3H            SYMBOL             RS0
+	B:00D4H            SYMBOL             RS1
+	B:00D5H            SYMBOL             F0
+	B:00D6H            SYMBOL             AC
+	B:00D7H            SYMBOL             CY
+	D:00CDH            SYMBOL             TH2
+LX51 CODE BANKING LINKER/LOCATOR V05.01.21         05/09/24  15:33:03  PAGE  3
+
+	D:00CCH            SYMBOL             TL2
+	D:00CBH            SYMBOL             RCAP2H
+	D:00CAH            SYMBOL             RCAP2L
+	D:00C8H            SYMBOL             T2CON
+	D:0099H            SYMBOL             SBUF
+	D:0098H            SYMBOL             SCON
+	D:00B8H            SYMBOL             IP
+	D:00A8H            SYMBOL             IE
+	D:008DH            SYMBOL             TH1
+	D:008CH            SYMBOL             TH0
+	D:008BH            SYMBOL             TL1
+	D:008AH            SYMBOL             TL0
+	D:0089H            SYMBOL             TMOD
+	D:0088H            SYMBOL             TCON
+	D:0087H            SYMBOL             PCON
+	D:0083H            SYMBOL             DPH
+	D:0082H            SYMBOL             DPL
+	D:0081H            SYMBOL             SP
+	D:00F0H            SYMBOL             B
+	D:00E0H            SYMBOL             ACC
+	D:00D0H            SYMBOL             PSW
+	D:00B0H            SYMBOL             P3
+	D:00A0H            SYMBOL             P2
+	D:0090H            SYMBOL             P1
+	D:0080H            SYMBOL             P0
+	-------            PROC               _Delay
+	C:002DH            LINE#              14
+	C:002DH            LINE#              14
+	C:002DH            LINE#              16
+	C:0030H            LINE#              17
+	C:0032H            LINE#              18
+	C:0038H            LINE#              17
+	C:003EH            LINE#              19
+	C:0041H            LINE#              21
+	C:0041H            LINE#              21
+	-------            ENDPROC            _Delay
+	-------            PROC               int0_isr
+	C:0042H            LINE#              24
+	C:004EH            LINE#              24
+	C:004EH            LINE#              25
+	C:0050H            LINE#              26
+	C:0058H            LINE#              27
+	C:005DH            LINE#              28
+	C:005FH            LINE#              29
+	C:006DH            LINE#              30
+	C:006DH            LINE#              30
+	-------            ENDPROC            int0_isr
+	-------            PROC               int1_isr
+	C:006EH            LINE#              33
+	C:007AH            LINE#              33
+	C:007AH            LINE#              34
+	C:007CH            LINE#              35
+	C:007EH            LINE#              36
+	C:008BH            LINE#              37
+	C:0093H            LINE#              39
+	C:0098H            LINE#              40
+	C:009AH            LINE#              41
+	C:00A8H            LINE#              42
+	C:00A8H            LINE#              42
+	-------            ENDPROC            int1_isr
+	-------            PROC               main
+	C:00A9H            LINE#              45
+	C:00A9H            LINE#              45
+	C:00A9H            LINE#              46
+	C:00ABH            LINE#              47
+	C:00ADH            LINE#              48
+	C:00AFH            LINE#              49
+	C:00B1H            LINE#              50
+LX51 CODE BANKING LINKER/LOCATOR V05.01.21         05/09/24  15:33:03  PAGE  4
+
+	D:0007H            SYMBOL             i
+	C:00B3H            LINE#              53
+	C:00BCH            LINE#              54
+	C:00C0H            LINE#              55
+	C:00C7H            LINE#              56
+	C:00CBH            LINE#              57
+	C:00E2H            LINE#              58
+	C:00E6H            LINE#              59
+	C:00EDH            LINE#              60
+	C:00F1H            LINE#              62
+	-------            ENDPROC            main
+	-------            ENDMOD             asd
+	C:000EH            PUBLIC             ?C_START3
+	D:00A0H            PUBLIC             HPD_ADDR
+	N:007FH            PUBLIC             IDATALEN
+	N:00FFH            PUBLIC             _INITP2?
+
+LINK/LOCATE RUN COMPLETE,  NO ERROR FOUND.
+

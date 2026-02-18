@@ -1,0 +1,267 @@
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 1
+
+
+
+
+
+       MCS-51 Family Macro Assembler   A S E M - 5 1   V 1.3
+       =====================================================
+
+
+
+	Source File:	C:\Users\nadth\Downloads\2.asm
+	Object File:	C:\Users\nadth\Downloads\2.hex
+	List File:	C:\Users\nadth\Downloads\2.lst
+
+
+
+ Line  I  Addr  Code            Source
+
+    1:		N      00C8	T2CON EQU 0C8H
+    2:		N      00CA	RCAP2L EQU 0CAH
+    3:		N      00CB	RCAP2H EQU 0CBH
+    4:
+    5:		N      0000		ORG 0000H ; Lab10Srl2.Sub
+    6:	  0000	21 00			JMP 0100H
+    7:
+    8:		N      0100		ORG 0100H
+    9:	  0100	75 81 3F		MOV SP,#3FH
+   10:	  0103	C2 AF			CLR EA ; Disable All
+   11:	  0105	75 98 50		MOV SCON,#01010000B ; Mode1 Serial Port
+   12:	  0108	75 CB FF		MOV RCAP2H,#0FFH ; Reload values for desired
+   13:	  010B	75 CA C4		MOV RCAP2L,#0C4H ; baud rate 9600@11.0592
+   14:	  010E	75 C8 34		MOV T2CON,#00110100B ; Timer 2 as baud rate generator
+   15:										; and turn on Timer 2
+   16:
+   17:	  0111	C2 98		Main_Loop: CLR RI ; Ready for New Data
+   18:	  0113	30 98 FD		JNB RI,$ ; Wait Until Data In
+   19:	  0116	E5 99			MOV A,SBUF ; Get Data In
+   20:
+   21:	  0118	B4 30 09	_IS_ASCII_0: CJNE A,#'0',_IS_ASCII_1
+   22:	  011B	D2 B7			SETB P3.7
+   23:	  011D	74 01			MOV A,#01H
+   24:	  011F	12 01 9A		CALL Display
+   25:	  0122	80 ED			JMP Main_Loop
+   26:
+   27:	  0124	B4 31 09	_IS_ASCII_1: CJNE A,#'1',_IS_ASCII_2
+   28:	  0127	D2 B7			SETB P3.7
+   29:	  0129	74 02			MOV A,#02H
+   30:	  012B	12 01 9A		CALL Display
+   31:	  012E	80 E1			JMP Main_Loop
+   32:
+   33:	  0130	B4 32 09	_IS_ASCII_2: CJNE A,#'2',_IS_ASCII_3
+   34:	  0133	D2 B7			SETB P3.7
+   35:	  0135	74 03			MOV A,#03H
+   36:	  0137	12 01 9A		CALL Display
+   37:	  013A	80 D5			JMP Main_Loop
+   38:
+   39:	  013C	B4 33 09	_IS_ASCII_3: CJNE A,#'3',_IS_ASCII_4
+   40:	  013F	D2 B7			SETB P3.7
+   41:	  0141	74 04			MOV A,#04H
+   42:	  0143	12 01 9A		CALL Display
+   43:	  0146	80 C9			JMP Main_Loop
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 2
+
+
+
+ Line  I  Addr  Code            Source
+
+   44:
+   45:	  0148	B4 34 09	_IS_ASCII_4: CJNE A,#'4',_IS_ASCII_5
+   46:	  014B	D2 B7			SETB P3.7
+   47:	  014D	74 05			MOV A,#05H
+   48:	  014F	12 01 9A		CALL Display
+   49:	  0152	80 BD			JMP Main_Loop
+   50:
+   51:	  0154	B4 35 09	_IS_ASCII_5: CJNE A,#'5',_IS_ASCII_6
+   52:	  0157	D2 B7			SETB P3.7
+   53:	  0159	74 06			MOV A,#06H
+   54:	  015B	12 01 9A		CALL Display
+   55:	  015E	80 B1			JMP Main_Loop
+   56:
+   57:	  0160	B4 36 09	_IS_ASCII_6: CJNE A,#'6',_IS_ASCII_7
+   58:	  0163	D2 B7			SETB P3.7
+   59:	  0165	74 07			MOV A,#07H
+   60:	  0167	12 01 9A		CALL Display
+   61:	  016A	80 A5			JMP Main_Loop
+   62:
+   63:	  016C	B4 37 09	_IS_ASCII_7: CJNE A,#'7',_IS_ASCII_8
+   64:	  016F	D2 B7		 	SETB P3.7
+   65:	  0171	74 08			MOV A,#08H
+   66:	  0173	12 01 9A		CALL Display
+   67:	  0176	80 99			JMP Main_Loop
+   68:
+   69:	  0178	B4 38 09	_IS_ASCII_8: CJNE A,#'8',_IS_ASCII_9
+   70:	  017B	D2 B7			SETB P3.7
+   71:	  017D	74 09			MOV A,#09H
+   72:	  017F	12 01 9A		CALL Display
+   73:	  0182	80 8D			JMP Main_Loop
+   74:
+   75:	  0184	B4 39 09	_IS_ASCII_9: CJNE A,#'9',_IS_ASCII_Etc
+   76:	  0187	D2 B7			SETB P3.7
+   77:	  0189	74 0A			MOV A,#0AH
+   78:	  018B	12 01 9A		CALL Display
+   79:	  018E	80 81			JMP Main_Loop
+   80:
+   81:	  0190	00		_IS_ASCII_Etc: NOP
+   82:	  0191	D2 B7			SETB P3.7
+   83:	  0193	74 00			MOV A,#00H
+   84:	  0195	12 01 9A		CALL Display
+   85:	  0198	21 11			JMP Main_Loop
+   86:
+   87:	  019A			Display:
+   88:	  019A			Blink:
+   89:	  019A	90 01 A6		MOV DPTR,#Seg_Tab
+   90:	  019D	93			MOVC A,@A+DPTR
+   91:	  019E	F4			CPL A
+   92:	  019F	F5 80			MOV P0,A
+   93:	  01A1	C2 94			CLR P1.4
+   94:	  01A3	C2 95			CLR P1.5
+   95:	  01A5	22			RET
+   96:
+   97:	  01A6	08 77 11 6D	Seg_Tab: 	DB 08H, 77H, 11H, 6DH, 5DH, 1BH, 5EH, 7EH, 15H
+	  01AA	5D 1B 5E 7E
+	  01AE	15
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 3
+
+
+
+ Line  I  Addr  Code            Source
+
+   98:	  01AF	7F 5F 3F 7A			DB 7FH, 5FH, 3FH, 7AH, 66H, 79H, 6EH, 2EH
+	  01B3	66 79 6E 2E
+   99:
+  100:	  01B7	7B 03		Delay: 		MOV	 R3,#3
+  101:	  01B9	EB					MOV A,R3
+  102:	  01BA	8B F0					MOV B,R3
+  103:	  01BC	DB FE		_Dly00: 		DJNZ R3,_Dly00
+  104:	  01BE	D5 E0 FB				DJNZ Acc,_Dly00
+  105:	  01C1	D5 F0 F8				DJNZ B,_Dly00
+  106:	  01C4	22					RET
+  107:
+  108:					END
+
+
+
+
+
+                     register banks used:  ---
+
+                     no errors
+
+
+
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 4
+
+
+
+
+
+	       L I S T   O F   S Y M B O L S
+	       =============================
+
+
+SYMBOL				  TYPE     VALUE	LINE
+------------------------------------------------------------
+??ASEM_51			  NUMBER    8051
+??VERSION			  NUMBER    0130
+AC				  BIT	      D6
+ACC				  DATA	      E0
+B				  DATA	      F0
+BLINK				  CODE	    019A	  88
+CY				  BIT	      D7
+DELAY				  CODE	    01B7	 100
+DISPLAY				  CODE	    019A	  87
+DPH				  DATA	      83
+DPL				  DATA	      82
+EA				  BIT	      AF
+ES				  BIT	      AC
+ET0				  BIT	      A9
+ET1				  BIT	      AB
+EX0				  BIT	      A8
+EX1				  BIT	      AA
+EXTI0				  CODE	    0003
+EXTI1				  CODE	    0013
+F0				  BIT	      D5
+IE				  DATA	      A8
+IE0				  BIT	      89
+IE1				  BIT	      8B
+INT0				  BIT	      B2
+INT1				  BIT	      B3
+IP				  DATA	      B8
+IT0				  BIT	      88
+IT1				  BIT	      8A
+MAIN_LOOP			  CODE	    0111	  17
+OV				  BIT	      D2
+P				  BIT	      D0
+P0				  DATA	      80
+P1				  DATA	      90
+P2				  DATA	      A0
+P3				  DATA	      B0
+PCON				  DATA	      87
+PS				  BIT	      BC
+PSW				  DATA	      D0
+PT0				  BIT	      B9
+PT1				  BIT	      BB
+PX0				  BIT	      B8
+PX1				  BIT	      BA
+RB8				  BIT	      9A
+RCAP2H				  NUMBER    00CB	   3
+RCAP2L				  NUMBER    00CA	   2
+RD				  BIT	      B7
+REN				  BIT	      9C
+RESET				  CODE	    0000
+RI				  BIT	      98
+RS0				  BIT	      D3
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 5
+
+
+
+SYMBOL				  TYPE     VALUE	LINE
+------------------------------------------------------------
+RS1				  BIT	      D4
+RXD				  BIT	      B0
+SBUF				  DATA	      99
+SCON				  DATA	      98
+SEG_TAB				  CODE	    01A6	  97
+SINT				  CODE	    0023
+SM0				  BIT	      9F
+SM1				  BIT	      9E
+SM2				  BIT	      9D
+SP				  DATA	      81
+T0				  BIT	      B4
+T1				  BIT	      B5
+T2CON				  NUMBER    00C8	   1
+TB8				  BIT	      9B
+TCON				  DATA	      88
+TF0				  BIT	      8D
+TF1				  BIT	      8F
+TH0				  DATA	      8C
+TH1				  DATA	      8D
+TI				  BIT	      99
+TIMER0				  CODE	    000B
+TIMER1				  CODE	    001B
+TL0				  DATA	      8A
+TL1				  DATA	      8B
+TMOD				  DATA	      89
+TR0				  BIT	      8C
+TR1				  BIT	      8E
+TXD				  BIT	      B1
+WR				  BIT	      B6
+_DLY00				  CODE	    01BC	 103
+_IS_ASCII_0			  CODE	    0118	  21
+_IS_ASCII_1			  CODE	    0124	  27
+_IS_ASCII_2			  CODE	    0130	  33
+_IS_ASCII_3			  CODE	    013C	  39
+_IS_ASCII_4			  CODE	    0148	  45
+_IS_ASCII_5			  CODE	    0154	  51
+_IS_ASCII_6			  CODE	    0160	  57
+_IS_ASCII_7			  CODE	    016C	  63
+_IS_ASCII_8			  CODE	    0178	  69
+_IS_ASCII_9			  CODE	    0184	  75
+_IS_ASCII_ETC			  CODE	    0190	  81

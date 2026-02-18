@@ -1,0 +1,283 @@
+RC51 COMPILER V03.03.32,  ASD                     05/09/24  15:33:03  PAGE  1
+
+QCW(0x00002F32)
+
+WIN32 RC51 COMPILER V03.03.32, COMPILATION OF MODULE ASD       
+OBJECT MODULE PLACED IN c:\users\nadth\onedrive\desktop\abcd\asd.obj
+COMPILER INVOKED BY: RC51.EXE C:\USERS\NADTH\ONEDRIVE\DESKTOP\ABCD\ASD.C OBJECT(
+            -C:\USERS\NADTH\ONEDRIVE\DESKTOP\ABCD\ASD.OBJ) PIN(C:\RIDE\INC;C:\RI
+            -DE\INC\51) PIN(C:\RIDE\INC\51\) NOAM PR(C:\USERS\NADTH\ONEDRIVE\DES
+            -KTOP\ABCD\ASD.LST) CD SB OE(1) SM FP(NOFLOAT) PW(80) NOIS UNSIGNEDC
+            -HAR ET(CHAR) 
+
+stmt level    source
+   1          #include <reg52.h>  
+   2          #define PortO_DispData P0  
+   3            
+   4          sbit CS_Seg0 = P1 ^ 4;  
+   5          sbit CS_Seg1 = P1 ^ 5;  
+   6           
+   7          unsigned int Count, Counter = 0;  
+   8          code unsigned char CodeSeg[] =  
+   9          { 0x77, 0x11, 0x6D, 0x5D, 0x1B, 0x5E, 0x7E, 0x15,  
+  10            0x7F, 0x5F, 0x3F, 0x7A, 0x66, 0x79, 0x6E, 0x2E  
+  11          };  
+  12            
+  13          //===============================================  
+  14          void Delay(unsigned char msec)  
+  15          { unsigned char i, j;  
+  16   1        while (msec)  
+  17   1        { for (i = 1; i <= 250; i++) //not :  
+  18   2            for (j = 1; j <= 113; j++); //with ;  
+  19   2          msec--;  
+  20   2        }  
+  21   1      }  
+  22            
+  23          //===============================================  
+  24          void int0_isr(void) interrupt 0  
+  25          { EX0 = 0; // Disable Interrupt INT0  
+  26   1        Counter++; // Increment Counter  
+  27   1        Delay(4); // Debounce Signal  
+  28   1        EX0 = 1; // Enable Interrupt INT0  
+  29   1        IE0 = 0;  
+  30   1      } 
+
+WARNING C233 IN LINE 30 OF asd.c : using absolute registers together with inter
+            -rupts can cause register corruptions (mixup of register banks)
+  31          
+  32          //===============================================  
+  33          void int1_isr(void) interrupt 1 {
+  34   1      	 IT0 = 0;
+  35   1          EX1 = 0; 
+  36   1          if (Counter > 0) {
+  37   2              Counter--; 
+  38   2          }
+  39   1          Delay(4); 
+  40   1          EX1 = 1;
+  41   1          IE1 = 0;
+  42   1      }
+  43            
+  44          //===============================================  
+  45          main()  
+  46          { IT0 = 1; // Edge Trigger Interrupt
+  47   1        IT1 = 1; // Edge Trigger Interrupt
+  48   1        EX0 = 1; // Enable External 0 Interrupt
+  49   1        EX1 = 1; // Enable External 1 Interrupt 
+  50   1        EA = 1; // Global Interrupt Enable  
+  51   1        while (1)  
+  52   1        { unsigned char i;  
+  53   2          Count = Counter & 0x0f;  
+  54   2          CS_Seg0 = 1; CS_Seg1 = 0;  
+  55   2          PortO_DispData = ~CodeSeg[Count];  
+  56   2          for (i = 1; i <= 250; i++) {};  
+  57   2          Count = (Counter >> 4) & 0x0f;  
+  58   2          CS_Seg0 = 0; CS_Seg1 = 1;  
+  59   2          PortO_DispData = ~CodeSeg[Count];  
+  60   2          for (i = 1; i <= 250; i++) {};  
+  61   2        }  
+  62   1      } 
+
+WARNING C096 IN LINE 62 OF asd.c : Function 'main' should return a value
+  63          
+RC51 COMPILER V03.03.32,  ASD                     05/09/24  15:33:03  PAGE  2
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+            ; FUNCTION _Delay (BEGIN)
+              ; Register R7 is assigned to parameter msec
+              ; R6 is assigned to i
+              ; R5 is assigned to j
+0000         ?WHILE1:
+                                           ; SOURCE LINE # 16 
+0000 EF             MOV    A,R7
+0001 6011           JZ     ?NXT5
+                                           ; SOURCE LINE # 17 
+0003 7E01           MOV    R6,#001H
+0005         ?FOR2:
+                                           ; SOURCE LINE # 18 
+0005 7C71           MOV    R4,#071H
+0007         ?NXT9:
+0007 DCFE           DJNZ   R4,?NXT9
+0009 7D72           MOV    R5,#072H
+                                           ; SOURCE LINE # 17 
+000B 0E             INC    R6
+000C EE             MOV    A,R6
+000D 64FB           XRL    A,#0FBH
+000F 70F4           JNZ    ?FOR2
+                                           ; SOURCE LINE # 19 
+0011 1F             DEC    R7
+0012 80EC           SJMP   ?WHILE1
+0014         ?NXT5:
+0014 22             RET    
+
+            ; FUNCTION _Delay (END)
+
+            ; FUNCTION int0_isr (BEGIN)
+                                           ; SOURCE LINE # 29 
+0000 C0E0           PUSH   ACC
+0002 C0D0           PUSH   PSW
+0004 C004           PUSH   AR4
+0006 C005           PUSH   AR5
+0008 C006           PUSH   AR6
+000A C007           PUSH   AR7
+                                           ; SOURCE LINE # 25 
+000C C2A8           CLR    EX0
+                                           ; SOURCE LINE # 26 
+000E 0500    R      INC    Counter+01H
+0010 E500    R      MOV    A,Counter+01H
+0012 7002           JNZ    ?LAB6
+0014 0500    R      INC    Counter
+0016         ?LAB6:
+                                           ; SOURCE LINE # 27 
+0016 7F04           MOV    R7,#004H
+0018 120000  R      LCALL  _Delay
+                                           ; SOURCE LINE # 28 
+001B D2A8           SETB   EX0
+                                           ; SOURCE LINE # 29 
+001D C289           CLR    IE0
+001F D007           POP    AR7
+0021 D006           POP    AR6
+0023 D005           POP    AR5
+0025 D004           POP    AR4
+0027 D0D0           POP    PSW
+0029 D0E0           POP    ACC
+002B 32             RETI   
+
+            ; FUNCTION int0_isr (END)
+
+            ; FUNCTION int1_isr (BEGIN)
+                                           ; SOURCE LINE # 41 
+0000 C0E0           PUSH   ACC
+0002 C0D0           PUSH   PSW
+0004 C004           PUSH   AR4
+0006 C005           PUSH   AR5
+0008 C006           PUSH   AR6
+000A C007           PUSH   AR7
+                                           ; SOURCE LINE # 34 
+000C C288           CLR    IT0
+                                           ; SOURCE LINE # 35 
+000E C2AA           CLR    EX1
+                                           ; SOURCE LINE # 36 
+0010 E500    R      MOV    A,Counter
+0012 B40006         CJNE   A,#000H,?LAB12
+0015 E500    R      MOV    A,Counter+01H
+0017 B40001         CJNE   A,#000H,?LAB12
+001A D3             SETB   C
+001B         ?LAB12:
+001B 4008           JC     ?NXT14
+                                           ; SOURCE LINE # 37 
+001D E500    R      MOV    A,Counter+01H
+001F 1500    R      DEC    Counter+01H
+0021 7002           JNZ    ?NXT14
+0023 1500    R      DEC    Counter
+0025         ?NXT14:
+                                           ; SOURCE LINE # 39 
+0025 7F04           MOV    R7,#004H
+0027 120000  R      LCALL  _Delay
+                                           ; SOURCE LINE # 40 
+002A D2AA           SETB   EX1
+                                           ; SOURCE LINE # 41 
+002C C28B           CLR    IE1
+002E D007           POP    AR7
+0030 D006           POP    AR6
+0032 D005           POP    AR5
+0034 D004           POP    AR4
+0036 D0D0           POP    PSW
+0038 D0E0           POP    ACC
+003A 32             RETI   
+
+            ; FUNCTION int1_isr (END)
+
+            ; FUNCTION main (BEGIN)
+                                           ; SOURCE LINE # 46 
+0000 D288           SETB   IT0
+                                           ; SOURCE LINE # 47 
+0002 D28A           SETB   IT1
+                                           ; SOURCE LINE # 48 
+0004 D2A8           SETB   EX0
+                                           ; SOURCE LINE # 49 
+0006 D2AA           SETB   EX1
+                                           ; SOURCE LINE # 50 
+0008 D2AF           SETB   EA
+000A         ?WHILE3:
+                                           ; SOURCE LINE # 53 
+000A E500    R      MOV    A,Counter+01H
+000C 540F           ANL    A,#00FH
+000E 750000  R      MOV    Count,#000H
+0011 F500    R      MOV    Count+01H,A
+                                           ; SOURCE LINE # 54 
+0013 D294           SETB   CS_Seg0
+0015 C295           CLR    CS_Seg1
+                                           ; SOURCE LINE # 55 
+0017 900000  R      MOV    DPTR,#CodeSeg
+001A 93             MOVC   A,@A+DPTR
+001B F4             CPL    A
+001C F580           MOV    P0,A
+              ; R7 is assigned to i
+                                           ; SOURCE LINE # 56 
+001E 7EFA           MOV    R6,#0FAH
+0020         ?NXT23:
+0020 DEFE           DJNZ   R6,?NXT23
+                                           ; SOURCE LINE # 57 
+0022 AB00    R      MOV    R3,Counter+01H
+0024 E500    R      MOV    A,Counter
+0026 75F004         MOV    B,#004H
+0029         ?LAB18:
+0029 C3             CLR    C
+002A 13             RRC    A
+002B CB             XCH    A,R3
+002C 13             RRC    A
+002D CB             XCH    A,R3
+002E D5F0F8         DJNZ   B,?LAB18
+0031 EB             MOV    A,R3
+0032 540F           ANL    A,#00FH
+0034 750000  R      MOV    Count,#000H
+0037 F500    R      MOV    Count+01H,A
+                                           ; SOURCE LINE # 58 
+0039 C294           CLR    CS_Seg0
+003B D295           SETB   CS_Seg1
+                                           ; SOURCE LINE # 59 
+003D 900000  R      MOV    DPTR,#CodeSeg
+0040 93             MOVC   A,@A+DPTR
+0041 F4             CPL    A
+0042 F580           MOV    P0,A
+                                           ; SOURCE LINE # 60 
+0044 7EFA           MOV    R6,#0FAH
+0046         ?NXT25:
+0046 DEFE           DJNZ   R6,?NXT25
+0048 80C0           SJMP   ?WHILE3
+
+            ; FUNCTION main (END)
+
+RC51 COMPILER V03.03.32,  ASD                     05/09/24  15:33:03  PAGE  3
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+Count. . . . . . . . . . . . . . . . .  PUBLIC  DATA    U_INT  0000H   2    
+Counter. . . . . . . . . . . . . . . .  PUBLIC  DATA    U_INT  0002H   2    
+CodeSeg. . . . . . . . . . . . . . . .  PUBLIC  CODE    ARRAY   0000H   16   
+Delay. . . . . . . . . . . . . . . . .  PUBLIC  CODE    PROC    -----   -----
+  msec?040 . . . . . . . . . . . . . .  PARAM   DATA    U_CHAR  0000H   1    
+  msec?040 . . . . . . . . . . . . . .  PARAM   DATA    U_CHAR  0000H   1    
+i?041. . . . . . . . . . . . . . . . .  AUTO    DATA    U_CHAR  0000H   1    
+j?042. . . . . . . . . . . . . . . . .  AUTO    DATA    U_CHAR  0000H   1    
+int0_isr . . . . . . . . . . . . . . .  PUBLIC  CODE    PROC    -----   -----
+int1_isr . . . . . . . . . . . . . . .  PUBLIC  CODE    PROC    -----   -----
+main . . . . . . . . . . . . . . . . .  PUBLIC  CODE    PROC    -----   -----
+i?047. . . . . . . . . . . . . . . . .  AUTO    DATA    U_CHAR  0000H   1    
+RC51 COMPILER V03.03.32,  ASD                     05/09/24  15:33:03  PAGE  4
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    198    ----
+   CONSTANT SIZE    =     16    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      4       3
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+RC51 COMPILATION COMPLETE.  2 WARNINGS,  0 ERROR

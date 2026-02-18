@@ -1,0 +1,20 @@
+WIN32 LX51 CODE BANKING LINKER/LOCATOR V05.01.21
+
+
+INTER-MODULE CROSS-REFERENCE LISTING
+------------------------------------
+
+          NAME. . . . . . . . USAGE   MODULE NAMES
+          ----------------------------------------
+          ?C_START3 . . . . . CODE    [C3S]:  ASD
+          CodeSeg . . . . . . CODE    [ASD]: 
+          Count . . . . . . . DATA    [ASD]: 
+          Counter . . . . . . DATA    [ASD]: 
+          HPD_ADDR  . . . . . DATA    [HPD]:  C3S
+          IDATALEN  . . . . . NUMBER  [_C_IDATALEN]:  C3S
+          int0_isr  . . . . . CODE    [ASD]: 
+          int1_isr  . . . . . CODE    [ASD]: 
+          main  . . . . . . . CODE    [ASD]:  C3S
+          _Delay  . . . . . . CODE    [ASD]: 
+          _INITP2?  . . . . . NUMBER  [_C_IDATALEN]:  C3S
+          _STACK  . . . . . . IDATA   [ASD]:  C3S

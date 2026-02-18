@@ -1,0 +1,159 @@
+[
+    {
+        "id": "dc68d1de7798c4e7",
+        "type": "tab",
+        "label": "Flow 2",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "471bbf33b7af4fb1",
+        "type": "mqtt in",
+        "z": "dc68d1de7798c4e7",
+        "name": "Temp",
+        "topic": "TAWUN",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "ffdd2651ee9e6f0b",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 170,
+        "y": 340,
+        "wires": [
+            [
+                "30e30e59c34b6a61"
+            ]
+        ]
+    },
+    {
+        "id": "30e30e59c34b6a61",
+        "type": "function",
+        "z": "dc68d1de7798c4e7",
+        "name": "function 2",
+        "func": "var myArray = msg.payload.split(\",\");\nvar tTemp = myArray[0].split(\"=\");\nvar hTemp = myArray[1].split(\"=\");\nvar Tempp = parseFloat(tTemp[1]);\nvar Humid = parseFloat(hTemp[1]);\nif (Tempp > 34) {\n    msg.payload = {\n        message: \"Over Heat\"\n    };\n    msg.payload = \"\\r\\nอุณหภูมิเกินเเล้วนะ สุดสวย!!!\";\n    msg.payload += \"\\r\\n อุณหภูมิตอนนี้ \"+Tempp+\" องศา\";\n    return [msg, null]; \n} else {\n    return [null, msg]; \n}\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 320,
+        "wires": [
+            [
+                "c27724e26307f501",
+                "42ecbf23a97a6ce0"
+            ]
+        ]
+    },
+    {
+        "id": "beae035da1da7cf7",
+        "type": "mqtt in",
+        "z": "dc68d1de7798c4e7",
+        "name": "Temp",
+        "topic": "TAWUN",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "ffdd2651ee9e6f0b",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 190,
+        "y": 480,
+        "wires": [
+            [
+                "acdd646774b1516a"
+            ]
+        ]
+    },
+    {
+        "id": "acdd646774b1516a",
+        "type": "function",
+        "z": "dc68d1de7798c4e7",
+        "name": "function 3",
+        "func": "var myArray = msg.payload.split(\",\");\nvar tTemp = myArray[0].split(\"=\");\nvar hTemp = myArray[1].split(\"=\");\nvar Tempp = parseFloat(tTemp[1]);\nvar Humid = parseFloat(hTemp[1]);\nmsg.payload = \"Tempp = \" + String(Tempp) + \",\" + \"Humid = \" +String(Humid)\nreturn msg;\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 480,
+        "wires": [
+            [
+                "d3c6143fb1b56ba3"
+            ]
+        ]
+    },
+    {
+        "id": "d3c6143fb1b56ba3",
+        "type": "debug",
+        "z": "dc68d1de7798c4e7",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 620,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "c27724e26307f501",
+        "type": "Notify",
+        "z": "dc68d1de7798c4e7",
+        "name": "Tawunchai Burakhon",
+        "x": 660,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "42ecbf23a97a6ce0",
+        "type": "Notify",
+        "z": "dc68d1de7798c4e7",
+        "name": "KIKI",
+        "x": 570,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "ffdd2651ee9e6f0b",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "broker.emqx.io",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    }
+]

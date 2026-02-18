@@ -1,0 +1,193 @@
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 1
+
+
+
+
+
+       MCS-51 Family Macro Assembler   A S E M - 5 1   V 1.3
+       =====================================================
+
+
+
+	Source File:	C:\Users\nadth\OneDrive\Desktop\micro\Lab8\ASM1\7seg-intr.asm
+	Object File:	C:\Users\nadth\OneDrive\Desktop\micro\Lab8\ASM1\7seg-intr.hex
+	List File:	C:\Users\nadth\OneDrive\Desktop\micro\Lab8\ASM1\7seg-intr.lst
+
+
+
+ Line  I  Addr  Code            Source
+
+    1:				;==== Lab81Ex1.Asm ====
+    2:		N      0040	Data_Count 	EQU 40H
+    3:		B      0094	Left_Select 	EQU P1.4
+    4:		B      0095	Right_Select 	EQU P1.5
+    5:		D      0080	Segment_Port 	EQU P0
+    6:
+    7:		N      0000			ORG 0000H
+    8:	  0000	02 01 00			JMP START
+    9:
+   10:		N      0013			ORG 0013H
+   11:	  0013	02 01 0F			JMP EX1_ROUTINE
+   12:
+   13:		N      0100			ORG 0100H
+   14:	  0100			START:
+   15:	  0100	D2 8A				SETB IT1 ; Edge Trigger
+   16:	  0102	75 A8 84			MOV IE,#10000100B
+   17:	  0105	75 40 00			MOV Data_Count,#0
+   18:	  0108			Main_Loop:
+   19:	  0108	E5 40				MOV A,Data_Count
+   20:	  010A	12 01 2C			CALL Show_7Segment
+   21:	  010D	80 F9				JMP Main_Loop
+   22:				;========================================
+   23:	  010F	C0 F0		EX1_ROUTINE: 	PUSH B
+   24:	  0111	C0 E0					PUSH Acc
+   25:	  0113	05 40					INC Data_Count
+   26:	  0115	12 01 22				CALL Debounce
+   27:	  0118	12 01 22				CALL Debounce
+   28:	  011B	C2 8B					CLR IE1 ; Clear Ext.Intr_1 Flag
+   29:	  011D	D0 E0					POP Acc
+   30:	  011F	D0 F0					POP B
+   31:	  0121	32					RETI ; Return from Interrupt
+   32:				;========================================
+   33:	  0122	E4		Debounce: 	CLR A
+   34:	  0123	F5 F0					MOV B,A
+   35:	  0125	D5 E0 FD	_Dly00: 		DJNZ Acc,_Dly00
+   36:	  0128	D5 F0 FA				DJNZ B,_Dly00
+   37:	  012B	22					RET
+   38:				;========================================
+   39:	  012C			Show_7Segment:
+   40:	  012C	C2 94					CLR Left_Select
+   41:	  012E	C2 95					CLR Right_Select
+   42:	  0130	54 0F					ANL A,#0FH ; 0nly 0-F
+   43:	  0132	90 01 3A				MOV DPTR,#CODE_TABLE
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 2
+
+
+
+ Line  I  Addr  Code            Source
+
+   44:	  0135	93					MOVC A,@A+DPTR
+   45:	  0136	F4					CPL A
+   46:	  0137	F5 80					MOV Segment_Port,A
+   47:	  0139	22					RET
+   48:	  013A			CODE_TABLE:
+   49:	  013A	0F 78 0F 78			DB 0FH, 78H, 0FH, 78H, 0FH, 78H, 0FH, 78H ; Code 0FH 0 TOP
+	  013E	0F 78 0F 78
+   50:	  0142	0F 78 0F 78			DB 0FH, 78H, 0FH, 78H, 0FH, 78H, 0FH, 78H ; Code 78H 0 BUTTOM
+	  0146	0F 78 0F 78
+   51:						END
+
+
+
+
+
+                     register banks used:  ---
+
+                     no errors
+
+
+
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 3
+
+
+
+
+
+	       L I S T   O F   S Y M B O L S
+	       =============================
+
+
+SYMBOL				  TYPE     VALUE	LINE
+------------------------------------------------------------
+??ASEM_51			  NUMBER    8051
+??VERSION			  NUMBER    0130
+AC				  BIT	      D6
+ACC				  DATA	      E0
+B				  DATA	      F0
+CODE_TABLE			  CODE	    013A	  48
+CY				  BIT	      D7
+DATA_COUNT			  NUMBER    0040	   2
+DEBOUNCE			  CODE	    0122	  33
+DPH				  DATA	      83
+DPL				  DATA	      82
+EA				  BIT	      AF
+ES				  BIT	      AC
+ET0				  BIT	      A9
+ET1				  BIT	      AB
+EX0				  BIT	      A8
+EX1				  BIT	      AA
+EX1_ROUTINE			  CODE	    010F	  23
+EXTI0				  CODE	    0003
+EXTI1				  CODE	    0013
+F0				  BIT	      D5
+IE				  DATA	      A8
+IE0				  BIT	      89
+IE1				  BIT	      8B
+INT0				  BIT	      B2
+INT1				  BIT	      B3
+IP				  DATA	      B8
+IT0				  BIT	      88
+IT1				  BIT	      8A
+LEFT_SELECT			  NUMBER    0094	   3
+MAIN_LOOP			  CODE	    0108	  18
+OV				  BIT	      D2
+P				  BIT	      D0
+P0				  DATA	      80
+P1				  DATA	      90
+P2				  DATA	      A0
+P3				  DATA	      B0
+PCON				  DATA	      87
+PS				  BIT	      BC
+PSW				  DATA	      D0
+PT0				  BIT	      B9
+PT1				  BIT	      BB
+PX0				  BIT	      B8
+PX1				  BIT	      BA
+RB8				  BIT	      9A
+RD				  BIT	      B7
+REN				  BIT	      9C
+RESET				  CODE	    0000
+RI				  BIT	      98
+RIGHT_SELECT			  NUMBER    0095	   4
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 4
+
+
+
+SYMBOL				  TYPE     VALUE	LINE
+------------------------------------------------------------
+RS0				  BIT	      D3
+RS1				  BIT	      D4
+RXD				  BIT	      B0
+SBUF				  DATA	      99
+SCON				  DATA	      98
+SEGMENT_PORT			  NUMBER    0080	   5
+SHOW_7SEGMENT			  CODE	    012C	  39
+SINT				  CODE	    0023
+SM0				  BIT	      9F
+SM1				  BIT	      9E
+SM2				  BIT	      9D
+SP				  DATA	      81
+START				  CODE	    0100	  14
+T0				  BIT	      B4
+T1				  BIT	      B5
+TB8				  BIT	      9B
+TCON				  DATA	      88
+TF0				  BIT	      8D
+TF1				  BIT	      8F
+TH0				  DATA	      8C
+TH1				  DATA	      8D
+TI				  BIT	      99
+TIMER0				  CODE	    000B
+TIMER1				  CODE	    001B
+TL0				  DATA	      8A
+TL1				  DATA	      8B
+TMOD				  DATA	      89
+TR0				  BIT	      8C
+TR1				  BIT	      8E
+TXD				  BIT	      B1
+WR				  BIT	      B6
+_DLY00				  CODE	    0125	  35

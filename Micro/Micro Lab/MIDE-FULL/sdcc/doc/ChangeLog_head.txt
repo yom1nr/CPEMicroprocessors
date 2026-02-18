@@ -1,0 +1,100 @@
+2010-12-16 Maarten Brock <sourceforge.brock AT dse.nl>
+
+	* support/cpp/c-ppoutput.c (scan_translation_unit): fix bug 1505956/1406219
+	* support/cpp/libcpp/include/cpplib.h: added IN_ASM
+	* support/cpp/libcpp/internal.h: added n__endasm to spec_nodes
+	* support/cpp/libcpp/lex.c (_cpp_process_line_notes): return int in_asm on
+	  continued inline asm lines,
+	  (_cpp_lex_direct): set/reset in_asm flag,
+	  (cpp_output_line): insert __endasm; __asm to fix bug 1505956/1406219
+	* support/cpp/libcpp/macro.c (macro_real_token_count): fixed warning
+	* support/cpp/sdcpp.c (sdcpp_init_options): init n__endasm
+
+2010-12-14 Borut Razem <borut.razem AT siol.net>
+
+	* src/SDCCdwarf2.c, src/SDCCset.c, src/pic16/pcode.c:
+	  fixed some defects, reported by Wipro DeepCheck static analysis tool
+
+2010-12-13 Borut Razem <borut.razem AT siol.net>
+
+	* src/pic14/main.c, src/pic16/main.c:
+	  fixed bug #3113082: Filenames with spaces fail on pic backend
+
+2010-12-11 Borut Razem <borut.razem AT siol.net>
+
+	* src/pic14/main.c:
+	  fixed bug #3135245: --use-non-free set the wrong dir for the lib
+
+2010-12-10 Philipp Klaus Krause <pkk AT spth.de>
+	* src/z80/gen.c:
+	  Fixed signed comparison for gbz80.
+
+2010-12-06 Philipp Klaus Krause <pkk AT spth.de>
+
+	* src/SDCCsymt.c:
+	  Optimized boolean ternary operator.
+
+2010-12-06 Borut Razem <borut.razem AT siol.net>
+
+	* src/Makefile.in, src/SDCCmain.c, src/src.dsp,
+	  src/pic14/main.c, src/z80/main.c, src/pic16/main.c,
+	  src/ds390/main.c, src/SDCCsystem.c, src/SDCCsystem.h:
+	  support/Util/MySystem.[ch] moved / renamed src/SDCCsystem.[ch]
+	* src/SDCCargs.h, src/SDCCasm.h, src/SDCCast.h:
+	  cosmetic changes
+
+2010-12-06 Maarten Brock <sourceforge.brock AT dse.nl>
+
+	* device/include/stdio.h,
+	* device/lib/printf_fast.c,
+	* device/lib/printf_tiny.c: fixed bug 3108582
+
+2010-12-05 Maarten Brock <sourceforge.brock AT dse.nl>
+
+	* src/z80/peep.c (z80instructionSize): fixed warning
+	* support/regression/tests/bug-3117729.c: fixed and enabled for mcs51
+
+2010-12-05 Borut Razem <borut.razem AT siol.net>
+
+	* Makefile.in:
+	  fixed bug #312815: Top level Makefile variable is mis-spelled
+
+2010-12-02 Philipp Klaus Krause <pkk AT spth.de>
+
+	* support/regression/tests/bug-3117729.c:
+	  Disabled test for mcs51.
+
+2010-11-29 Philipp Klaus Krause <pkk AT spth.de>
+
+	* support/regression/tests/bug-3117729.c:
+	  Added bug description.
+
+2010-11-28 Philipp Klaus Krause <pkk AT spth.de>
+
+	* src/z80/peeph-z80.def,
+	  support/regression/tests/bug-3117729.c:
+	  Fixed #3117729, minor peephole improvements.
+
+2010-11-28 Philipp Klaus Krause <pkk AT spth.de>
+
+	* src/SDCCpeeph.c,
+	  src/z80/peep.c:
+	  Fixed #3117748, improved fix for #3109557.
+
+2010-11-26 Raphael Neider <rneider AT web.de>
+
+	* src/pic14/glue.c (emitIvals): end retlw instruction with newline,
+	  fixes #3119071.
+
+2010-11-21 Philipp Klaus Krause <pkk AT spth.de>
+
+	* src/z80/peep.c,
+	  src/SDCCpeeph.c:
+	  Fixed #3109557.
+
+2010-11-21 Philipp Klaus Krause <pkk AT spth.de>
+
+	* src/z80/peeph-z80.def:
+	  Minor peephole fix.
+
+2010-11-15 Maarten Brock <sourceforge.brock AT dse.nl>

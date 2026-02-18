@@ -1,0 +1,41 @@
+Compiler   : BASCOM 8051 LIBRARY V 2.14
+Processor  : 8052
+Report     : NONAME1
+Date       : 10-17-2023
+Time       : 16:54:12
+
+Baud Timer : 1
+Baudrate   : 9600
+Frequency  : 11059200
+Clock div. : 12
+ROM start  : &H0
+RAM start  : &H0
+LCD mode   : 4-bit
+StackStart : &H35
+Used ROM   : &H2E6     742 (dec)  > Ok
+
+--------------------------------------------------------------------------------
+Variable                         Type            Address(hex)   Address(dec)
+--------------------------------------------------------------------------------
+
+ERR                              Bit               20.4
+
+
+DATA_NIBBLE                      Byte              0032          50 
+DATA_SHOW                        Byte              0033          51 
+DATA_INDEX                       Byte              0034          52 
+
+
+
+
+
+
+
+
+
+CONSTANTS
+--------------------------------------------------------------------------------
+Constant                         Value
+--------------------------------------------------------------------------------
+_BUILDVERSION                    213
+

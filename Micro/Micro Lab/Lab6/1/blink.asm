@@ -1,0 +1,37 @@
+	ORG 0000H 
+	JMP 0100H 
+
+	ORG 0100H 
+	CLR EA 
+	MOV SP,#3FH 
+LOOP: 	SETB P3.7 
+	CALL Delay 
+	CLR P3.7 
+	CALL Delay 
+	SETB P3.7 
+	CALL Delay 
+	CLR P3.7 
+	CALL Delay 
+	SETB P3.7 
+	CALL Delay
+	CALL Delay
+	CALL Delay
+	CALL Delay
+	CALL Delay
+	CALL Delay
+	JMP LOOP 
+	
+Delay: 	PUSH B 
+	PUSH 00H 
+	PUSH Acc 
+	MOV 00H,#8
+_DLY02: MOV A,#100 
+_DLY01: MOV B,#100
+_DLY00: DJNZ B,_DLY00 
+	DJNZ Acc,_DLY01 
+	DJNZ 00H,_DLY02
+	POP Acc 
+	POP 00H 
+	POP B
+	RET 
+	END 

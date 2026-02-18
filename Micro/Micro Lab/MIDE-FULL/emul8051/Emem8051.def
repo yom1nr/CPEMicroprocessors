@@ -1,0 +1,17 @@
+LIBRARY
+EXPORTS
+GetCode
+GetXdata
+PutXdata
+GetDataFromBankAndOffset
+PutDataFromBankAndOffset
+CreateMem
+InitMem
+ZeroMem
+ProcessUserArg
+GetTargetBank
+GetTargetIndex
+StoreFileValues
+BankSize
+NumBanks
+SetupMemorySystem

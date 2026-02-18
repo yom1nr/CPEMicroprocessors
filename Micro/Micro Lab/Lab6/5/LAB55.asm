@@ -1,0 +1,75 @@
+
+LF_SEG 	EQU 	P1.4
+RG_SEG 	EQU 	P1.5
+PT_SEG	EQU 	P0
+	ORG 	0000H
+	JMP 	0100H
+	ORG 	0100H
+	MOV 	SP,#2FH
+	SETB 	LF_SEG
+	CLR 	RG_SEG
+	ORL 	P1,#00001111B
+
+LOOP: 	MOV 	A,P2
+	CPL 	A
+	ANL 	A,#0FFH
+	MOV 	R7,A
+	
+	MOV 	B,#00001000B ; -
+	MOV 	A,R7
+	JZ 	SHOW
+	
+	MOV 	B,#77H ; 0
+	MOV 	A,R7
+	XRL 	A,#01H
+	JZ 	SHOW
+	
+	MOV 	B,#11H ; 1
+	MOV 	A,R7
+	XRL 	A,#02H
+	JZ 	SHOW
+	
+	MOV 	B,#6DH ; 2
+	MOV 	A,R7
+	XRL 	A,#04H
+	JZ 	SHOW
+	
+	MOV 	B,#5DH ; 3
+	MOV 	A,R7
+	XRL 	A,#08H
+	JZ 	SHOW
+	
+	MOV 	B,#1BH ; 4
+	MOV 	A,R7
+	XRL 	A,#10H
+	JZ 	SHOW
+	
+	MOV 	B,#5EH ; 5
+	MOV 	A,R7
+	XRL 	A,#20H
+	JZ 	SHOW
+	
+	MOV 	B,#7EH ; 6
+	MOV 	A,R7
+	XRL 	A,#40H
+	JZ 	SHOW
+	
+	MOV 	B,#15H ; 7
+	MOV 	A,R7
+	XRL 	A,#80H
+	JZ 	SHOW
+	
+	MOV 	B,#01101110B ; E
+
+SHOW: 	MOV 	A,B
+	CPL 	A
+	MOV 	PT_SEG,A
+	CALL 	DELAY
+	JMP 	LOOP
+Delay: 	MOV 	B,#00H
+	MOV 	A,#00H
+_DLY00: DJNZ 	Acc,_DLY00
+	DJNZ 	B,_DLY00
+	RET
+	
+	END

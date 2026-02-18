@@ -1,0 +1,208 @@
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 1
+
+
+
+
+
+       MCS-51 Family Macro Assembler   A S E M - 5 1   V 1.3
+       =====================================================
+
+
+
+	Source File:	C:\Users\nadth\Downloads\3.asm
+	Object File:	C:\Users\nadth\Downloads\3.hex
+	List File:	C:\Users\nadth\Downloads\3.lst
+
+
+
+ Line  I  Addr  Code            Source
+
+    1:		B      0090	SW_P10 	EQU 	P1.0
+    2:		B      0091	SW_P11 	EQU 	P1.1
+    3:		B      0092	SW_P12 	EQU 	P1.2
+    4:		B      0093	SW_P13 	EQU 	P1.3
+    5:
+    6:
+    7:		N      0000		ORG 0000H ; Lab10Srl1.Sub
+    8:	  0000	21 00			JMP 0100H
+    9:		N      0100		ORG 0100H
+   10:	  0100	75 81 3F		MOV SP,#3FH
+   11:	  0103	C2 AF			CLR EA ; Disable All
+   12:	  0105	12 01 71		CALL Delay ; Start Delay
+   13:	  0108	75 89 21		MOV TMOD,#00100001B ; T1M2 T0M1
+   14:	  010B	75 98 50		MOV SCON,#01010000B ; Serial Mode1
+   15:	  010E	75 8D FB		MOV TH1,#0FBH ; 9600 FBH@18.432MHz
+   16:	  0111	D2 8E			SETB TR1 ; Start Timer1
+   17:
+   18:	  0113	75 81 2F		MOV 	SP,#2FH
+   19:	  0116	C2 AF			CLR 	EA
+   20:	  0118	D2 90		LOOP: 	SETB 	SW_P10
+   21:	  011A	D2 91			SETB 	SW_P11
+   22:	  011C	D2 92			SETB 	SW_P12
+   23:	  011E	D2 93			SETB 	SW_P13
+   24:	  0120	20 90 0F	_CHK10: JB 	SW_P10,_CHK11
+   25:	  0123	74 30			MOV A,#'0'
+   26:	  0125	F5 99			MOV SBUF,A
+   27:	  0127	12 01 6A		CALL 	DEBOUNCE
+   28:	  012A	30 90 FD		JNB 	SW_P10,$
+   29:	  012D	12 01 6A		CALL 	DEBOUNCE
+   30:	  0130	80 E6			JMP 	LOOP
+   31:
+   32:	  0132	20 91 0F	_CHK11: JB 	SW_P11,_CHK12
+   33:	  0135	74 31			MOV A,#'1'
+   34:	  0137	F5 99			MOV SBUF,A
+   35:	  0139	12 01 6A		CALL 	DEBOUNCE
+   36:	  013C	30 91 FD		JNB 	SW_P11,$
+   37:	  013F	12 01 6A		CALL 	DEBOUNCE
+   38:	  0142	80 D4			JMP 	LOOP
+   39:	  0144	20 92 0F	_CHK12: JB 	SW_P12,_CHK13
+   40:	  0147	74 32			MOV A,#'2'
+   41:	  0149	F5 99			MOV SBUF,A
+   42:	  014B	12 01 6A		CALL 	DEBOUNCE
+   43:	  014E	30 92 FD		JNB 	SW_P12,$
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 2
+
+
+
+ Line  I  Addr  Code            Source
+
+   44:	  0151	12 01 6A		CALL 	DEBOUNCE
+   45:	  0154	80 C2			JMP 	LOOP
+   46:	  0156	20 93 0F	_CHK13: JB SW_P13,_CHKXX
+   47:	  0159	74 33			MOV A,#'3'
+   48:	  015B	F5 99			MOV SBUF,A
+   49:	  015D	12 01 6A		CALL 	DEBOUNCE
+   50:	  0160	30 93 FD		JNB 	SW_P13,$
+   51:	  0163	12 01 6A		CALL 	DEBOUNCE
+   52:	  0166	80 B0			JMP 	LOOP
+   53:	  0168	80 AE		_CHKXX: JMP 	LOOP
+   54:
+   55:	  016A	C0 F0		DEBOUNCE: PUSH 	B
+   56:	  016C	C0 E0			PUSH 	Acc
+   57:	  016E	E4			CLR 	A
+   58:	  016F	F5 F0			MOV 	B,A
+   59:
+   60:	  0171	E4		Delay: CLR A
+   61:	  0172	F5 F0		MOV B,A
+   62:	  0174	D5 E0 FD	Dly00: DJNZ Acc,Dly00
+   63:	  0177	D5 F0 FA	DJNZ B,Dly00
+   64:	  017A	22		RET
+   65:
+   66:				END
+
+
+
+
+
+                     register banks used:  ---
+
+                     no errors
+
+
+
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 3
+
+
+
+
+
+	       L I S T   O F   S Y M B O L S
+	       =============================
+
+
+SYMBOL				  TYPE     VALUE	LINE
+------------------------------------------------------------
+??ASEM_51			  NUMBER    8051
+??VERSION			  NUMBER    0130
+AC				  BIT	      D6
+ACC				  DATA	      E0
+B				  DATA	      F0
+CY				  BIT	      D7
+DEBOUNCE			  CODE	    016A	  55
+DELAY				  CODE	    0171	  60
+DLY00				  CODE	    0174	  62
+DPH				  DATA	      83
+DPL				  DATA	      82
+EA				  BIT	      AF
+ES				  BIT	      AC
+ET0				  BIT	      A9
+ET1				  BIT	      AB
+EX0				  BIT	      A8
+EX1				  BIT	      AA
+EXTI0				  CODE	    0003
+EXTI1				  CODE	    0013
+F0				  BIT	      D5
+IE				  DATA	      A8
+IE0				  BIT	      89
+IE1				  BIT	      8B
+INT0				  BIT	      B2
+INT1				  BIT	      B3
+IP				  DATA	      B8
+IT0				  BIT	      88
+IT1				  BIT	      8A
+LOOP				  CODE	    0118	  20
+OV				  BIT	      D2
+P				  BIT	      D0
+P0				  DATA	      80
+P1				  DATA	      90
+P2				  DATA	      A0
+P3				  DATA	      B0
+PCON				  DATA	      87
+PS				  BIT	      BC
+PSW				  DATA	      D0
+PT0				  BIT	      B9
+PT1				  BIT	      BB
+PX0				  BIT	      B8
+PX1				  BIT	      BA
+RB8				  BIT	      9A
+RD				  BIT	      B7
+REN				  BIT	      9C
+RESET				  CODE	    0000
+RI				  BIT	      98
+RS0				  BIT	      D3
+RS1				  BIT	      D4
+RXD				  BIT	      B0
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 4
+
+
+
+SYMBOL				  TYPE     VALUE	LINE
+------------------------------------------------------------
+SBUF				  DATA	      99
+SCON				  DATA	      98
+SINT				  CODE	    0023
+SM0				  BIT	      9F
+SM1				  BIT	      9E
+SM2				  BIT	      9D
+SP				  DATA	      81
+SW_P10				  NUMBER    0090	   1
+SW_P11				  NUMBER    0091	   2
+SW_P12				  NUMBER    0092	   3
+SW_P13				  NUMBER    0093	   4
+T0				  BIT	      B4
+T1				  BIT	      B5
+TB8				  BIT	      9B
+TCON				  DATA	      88
+TF0				  BIT	      8D
+TF1				  BIT	      8F
+TH0				  DATA	      8C
+TH1				  DATA	      8D
+TI				  BIT	      99
+TIMER0				  CODE	    000B
+TIMER1				  CODE	    001B
+TL0				  DATA	      8A
+TL1				  DATA	      8B
+TMOD				  DATA	      89
+TR0				  BIT	      8C
+TR1				  BIT	      8E
+TXD				  BIT	      B1
+WR				  BIT	      B6
+_CHK10				  CODE	    0120	  24
+_CHK11				  CODE	    0132	  32
+_CHK12				  CODE	    0144	  39
+_CHK13				  CODE	    0156	  46
+_CHKXX				  CODE	    0168	  53

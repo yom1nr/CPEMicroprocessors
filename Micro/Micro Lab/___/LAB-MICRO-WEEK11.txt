@@ -1,0 +1,386 @@
+// EXAM 1
+#include <Wire.h>
+#include <BH1750.h>
+BH1750 lightMeter;
+#define LED 2
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(LED,OUTPUT);
+  Wire.begin();
+  lightMeter.begin();
+  Serial.println(F("BH1750 Test begin"));
+}
+void loop() {
+  float lux = lightMeter.readLightLevel();
+  Serial.print("Light: ");
+  Serial.print(lux);
+  Serial.println(" lx");
+  if(lux==0){
+    digitalWrite(LED,HIGH);
+  }
+  else{
+    digitalWrite(LED,LOW);
+  }
+  delay(1000);
+}
+
+//EXAM 2
+#include <ezButton.h> 
+
+#define CLK_PIN 16    
+#define DT_PIN 17     
+#define SW_PIN 5     
+
+#define DIRECTION_CW 0    
+#define DIRECTION_CCW 1   
+
+int counter = 0;
+int direction = DIRECTION_CW;
+int CLK_state;
+int prev_CLK_state;
+ezButton button(SW_PIN);  // create ezButton object that attach to pin 7
+
+const int stepsPerRevolution = 20;  // จำนวนขั้น (steps) ต่อการหมุน 1 รอบเต็ม
+
+void setup() {
+  Serial.begin(115200);
+  // configure encoder pins as inputs
+  pinMode(CLK_PIN, INPUT);
+  pinMode(DT_PIN, INPUT);
+  button.setDebounceTime(50);  // set debounce time to 50 milliseconds
+  // read the initial state of the rotary encoder's CLK pin
+  prev_CLK_state = digitalRead(CLK_PIN);
+}
+
+void loop() {
+  button.loop();  // MUST call the loop() function first
+  // read the current state of the rotary encoder's CLK pin
+  CLK_state = digitalRead(CLK_PIN);
+
+  // If the state of CLK is changed, then pulse occurred
+  // React to only the rising edge (from LOW to HIGH) to avoid double count
+  if (CLK_state != prev_CLK_state && CLK_state == HIGH) {
+    // if the DT state is HIGH
+    // the encoder is rotating in counter-clockwise direction => decrease the counter
+    if (digitalRead(DT_PIN) == HIGH) {
+      counter++;
+      direction = DIRECTION_CCW;
+    } else {
+      // the encoder is rotating in clockwise direction => increase the counter
+      counter--;
+      direction = DIRECTION_CW;
+    }
+    
+    // แปลงค่าการหมุนให้อยู่ในช่วง 0 ถึง 360 องศา
+    int angle = (counter % stepsPerRevolution) * 360 / stepsPerRevolution;
+    if (angle < 0) {
+      angle += 360;
+    }
+    
+    Serial.print("Rotary Encoder:: direction: ");
+    if (direction == DIRECTION_CW)
+      Serial.print("Clockwise");
+    Serial.print("count: ");
+    Serial.print(counter);
+    Serial.print(" - angle: ");
+    Serial.print(angle);
+    Serial.println(" degrees");
+  }
+
+  // save last CLK state
+  prev_CLK_state = CLK_state;
+
+  if (button.isPressed()) {
+    Serial.println("The button is pressed");
+  }
+}
+
+//EXAM 3 and 4
+#include "DHTesp.h" 
+#include <WiFi.h> 
+#include <time.h> 
+#include <InfluxDbClient.h>   // https://github.com/tobiasschuerg/InfluxDB-Client-for-Arduino 
+#include <InfluxDbCloud.h> 
+
+#define Pin_DHT22 15 // D15 
+
+DHTesp dht; 
+
+const char* ssid = "vivo Y33T"; 
+const char* password = "0935096372"; 
+
+#define HOSTNAME "ESP32 Temperature Sensor" 
+#define LOCATION "1000 chem" 
+
+// InfluxDB server URL
+#define INFLUXDB_URL "https://us-east-1-1.aws.cloud2.influxdata.com" 
+#define INFLUXDB_TOKEN "BcCvjnVaPXekkaDNQjqvakend95gq5syq1m4txcONy7nQmxh1Wxd4S_e6xWqq3vc1GNXikxQmwRQMZKBKbdawg==" 
+#define INFLUXDB_ORG "Tawun" 
+#define INFLUXDB_BUCKET "B6534240" 
+
+int number = 0;
+
+// InfluxDB client instance with preconfigured InfluxCloud certificate 
+InfluxDBClient client(INFLUXDB_URL, INFLUXDB_ORG, INFLUXDB_BUCKET, INFLUXDB_TOKEN, InfluxDbCloud2CACert); 
+Point sensor("room_sensor"); 
+
+void sendData(float temp, float humid, float lux, float angle) { 
+    Serial.print("Temperature: "); 
+    Serial.print(temp); 
+    Serial.print(" *C\t"); 
+    Serial.print("Humidity: "); 
+    Serial.print(humid); 
+    Serial.print(" %\t"); 
+    Serial.print("Lux: "); 
+    Serial.print(lux); 
+    Serial.print(" lx\t"); 
+    Serial.print("Rotary Angle: "); 
+    Serial.print(angle); 
+    Serial.println(" deg"); 
+
+    // Store measured value into point 
+    sensor.clearFields(); 
+    // Add data 
+    sensor.addField("count", number); 
+    sensor.addField("temperature", temp); 
+    sensor.addField("humidity", humid); 
+    sensor.addField("lux", lux); 
+    sensor.addField("rotary_angle", angle); 
+
+    // Print what we are exactly writing 
+    Serial.print("Writing: "); 
+    Serial.println(client.pointToLineProtocol(sensor)); 
+
+    // Write point 
+    if (!client.writePoint(sensor)) { 
+        Serial.print("InfluxDB write failed: "); 
+        Serial.println(client.getLastErrorMessage()); 
+    } 
+} 
+
+void setup() { 
+    Serial.begin(115200); 
+    randomSeed(analogRead(0)); // Initialize random seed
+    dht.setup(Pin_DHT22, DHTesp::DHT22); 
+    delay(10); 
+    Serial.println(); 
+    Serial.print("Connecting to "); 
+    Serial.println(ssid); 
+
+    WiFi.begin(ssid, password); 
+    while (WiFi.status() != WL_CONNECTED) { 
+        delay(500); 
+        Serial.print("."); 
+    } 
+
+    Serial.println(""); 
+    Serial.println("WiFi connected"); 
+    Serial.println("IP address: "); 
+    Serial.println(WiFi.localIP()); 
+
+    if (client.validateConnection()) { 
+        Serial.print("Connected to InfluxDB: "); 
+        Serial.println(client.getServerUrl()); 
+    } else { 
+        Serial.print("InfluxDB connection failed: "); 
+        Serial.println(client.getLastErrorMessage()); 
+    }
+} 
+
+void loop() {  
+    float DHT22_Tempp = random(1000, 3000) / 100.0; 
+    float DHT22_Humid = random(4000, 6000) / 100.0; 
+    float GY_302 = random(7000, 9000) / 100.0; 
+    float Rotary_Angle = random(10000, 11000) / 100.0; 
+
+    Serial.print("Count: "); 
+    Serial.println(number); 
+    Serial.print("Temperature: "); 
+    Serial.print(DHT22_Tempp); 
+    Serial.print(" *C\t"); 
+    Serial.print("Humidity: "); 
+    Serial.print(DHT22_Humid); 
+    Serial.print(" %\t"); 
+    Serial.print("Lux: "); 
+    Serial.print(GY_302); 
+    Serial.print(" lx\t"); 
+    Serial.print("Rotary Angle: "); 
+    Serial.print(Rotary_Angle); 
+    Serial.println(" deg"); 
+
+    sendData(DHT22_Tempp, DHT22_Humid, GY_302, Rotary_Angle); 
+    number++; 
+    delay(4000); 
+}
+
+//EXAM 5
+#include "DHTesp.h" 
+#include <WiFi.h> 
+#include <time.h> 
+#include <InfluxDbClient.h>   // https://github.com/tobiasschuerg/InfluxDB-Client-for-Arduino 
+#include <InfluxDbCloud.h> 
+#include <Wire.h>
+#include <BH1750.h>
+#include <ezButton.h>
+
+// Pin definitions
+#define Pin_DHT22 15 // D15
+#define LED 2
+#define CLK_PIN 16    
+#define DT_PIN 17     
+#define SW_PIN 5     
+
+// WiFi credentials
+const char* ssid = "vivo Y33T"; 
+const char* password = "0935096372"; 
+
+// InfluxDB details
+#define HOSTNAME "ESP32 Temperature Sensor" 
+#define LOCATION "1000 chem" 
+#define INFLUXDB_URL "https://us-east-1-1.aws.cloud2.influxdata.com" 
+#define INFLUXDB_TOKEN "BcCvjnVaPXekkaDNQjqvakend95gq5syq1m4txcONy7nQmxh1Wxd4S_e6xWqq3vc1GNXikxQmwRQMZKBKbdawg==" 
+#define INFLUXDB_ORG "Tawun" 
+#define INFLUXDB_BUCKET "B6534240" 
+
+int number = 0;
+
+// Sensor and button setup
+DHTesp dht; 
+BH1750 lightMeter;
+ezButton button(SW_PIN);  // create ezButton object that attach to pin 5
+
+// Rotary encoder variables
+int counter = 0;
+int direction = 0;
+int CLK_state;
+int prev_CLK_state;
+const int stepsPerRevolution = 20;  // จำนวนขั้น (steps) ต่อการหมุน 1 รอบเต็ม
+
+// InfluxDB client instance with preconfigured InfluxCloud certificate 
+InfluxDBClient client(INFLUXDB_URL, INFLUXDB_ORG, INFLUXDB_BUCKET, INFLUXDB_TOKEN, InfluxDbCloud2CACert); 
+Point sensor("room_sensor"); 
+
+void sendData(float temp, float humid, float lux, float angle) { 
+    Serial.print("Temperature: "); 
+    Serial.print(temp); 
+    Serial.print(" *C\t"); 
+    Serial.print("Humidity: "); 
+    Serial.print(humid); 
+    Serial.print(" %\t"); 
+    Serial.print("Lux: "); 
+    Serial.print(lux); 
+    Serial.print(" lx\t"); 
+    Serial.print("Rotary Angle: "); 
+    Serial.print(angle); 
+    Serial.println(" deg"); 
+
+    // Store measured value into point 
+    sensor.clearFields(); 
+    // Add data 
+    sensor.addField("count", number); 
+    sensor.addField("temperature", temp); 
+    sensor.addField("humidity", humid); 
+    sensor.addField("lux", lux); 
+    sensor.addField("rotary_angle", angle); 
+
+    // Print what we are exactly writing 
+    Serial.print("Writing: "); 
+    Serial.println(client.pointToLineProtocol(sensor)); 
+
+    // Write point 
+    if (!client.writePoint(sensor)) { 
+        Serial.print("InfluxDB write failed: "); 
+        Serial.println(client.getLastErrorMessage()); 
+    } 
+} 
+
+void setup() { 
+    Serial.begin(115200); 
+    dht.setup(Pin_DHT22, DHTesp::DHT22); 
+    pinMode(LED, OUTPUT);
+    Wire.begin();
+    lightMeter.begin();
+    button.setDebounceTime(50);  // set debounce time to 50 milliseconds
+
+    // configure encoder pins as inputs
+    pinMode(CLK_PIN, INPUT);
+    pinMode(DT_PIN, INPUT);
+    prev_CLK_state = digitalRead(CLK_PIN);
+
+    Serial.println();
+    Serial.print("Connecting to "); 
+    Serial.println(ssid); 
+
+    WiFi.begin(ssid, password); 
+    while (WiFi.status() != WL_CONNECTED) { 
+        delay(500); 
+        Serial.print("."); 
+    } 
+
+    Serial.println(""); 
+    Serial.println("WiFi connected"); 
+    Serial.println("IP address: "); 
+    Serial.println(WiFi.localIP()); 
+
+    if (client.validateConnection()) { 
+        Serial.print("Connected to InfluxDB: "); 
+        Serial.println(client.getServerUrl()); 
+    } else { 
+        Serial.print("InfluxDB connection failed: "); 
+        Serial.println(client.getLastErrorMessage()); 
+    }
+} 
+
+void loop() {  
+    // Read DHT22 sensor values
+    float DHT22_Tempp = dht.getTemperature();
+    float DHT22_Humid = dht.getHumidity();
+
+    // Read BH1750 sensor value
+    float lux = lightMeter.readLightLevel();
+    if (lux == 0) {
+        digitalWrite(LED, HIGH);
+    } else {
+        digitalWrite(LED, LOW);
+    }
+
+    // Read rotary encoder value
+    button.loop();  // MUST call the loop() function first
+    CLK_state = digitalRead(CLK_PIN);
+    if (CLK_state != prev_CLK_state && CLK_state == HIGH) {
+        if (digitalRead(DT_PIN) == HIGH) {
+            counter++;
+            direction = 1; // CCW
+        } else {
+            counter--;
+            direction = 0; // CW
+        }
+    }
+    prev_CLK_state = CLK_state;
+
+    int angle = (counter % stepsPerRevolution) * 360 / stepsPerRevolution;
+    if (angle < 0) {
+        angle += 360;
+    }
+
+    Serial.print("Count: "); 
+    Serial.println(number); 
+    Serial.print("Temperature: "); 
+    Serial.print(DHT22_Tempp); 
+    Serial.print(" *C\t"); 
+    Serial.print("Humidity: "); 
+    Serial.print(DHT22_Humid); 
+    Serial.print(" %\t"); 
+    Serial.print("Lux: "); 
+    Serial.print(lux); 
+    Serial.print(" lx\t"); 
+    Serial.print("Rotary Angle: "); 
+    Serial.print(angle); 
+    Serial.println(" deg"); 
+
+    sendData(DHT22_Tempp, DHT22_Humid, lux, angle); 
+    number++; 
+    delay(4000); 
+}
+

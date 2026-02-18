@@ -1,0 +1,105 @@
+s
+Count 		EQU 	20H
+SW_P10 		EQU 	P1.0
+SW_P11 		EQU 	P1.1
+SW_P12 		EQU 	P1.2
+SW_P13 		EQU 	P1.3
+
+		ORG 	0000H
+		JMP 	0100H
+		ORG 	0100H
+		MOV 	SP,#2FH
+		CLR 	EA
+		MOV 	Count,#05H
+		CALL 	DISPLAY
+LOOP: 		SETB 	SW_P10
+		SETB 	SW_P11
+		SETB 	SW_P12
+		SETB 	SW_P13
+	
+_CHK10: 	JB 	SW_P10,_CHK11
+		INC 	Count
+		CALL 	CHK_Over9
+		CALL 	DISPLAY
+		CALL 	DEBOUNCE
+		JNB 	SW_P10,$
+		CALL 	DEBOUNCE
+		JMP 	LOOP
+
+_CHK11: 	JB 	SW_P11,_CHK12
+		INC 	Count
+		INC 	Count
+		CALL 	CHK_Over9
+		CALL 	DISPLAY
+		CALL 	DEBOUNCE
+		JNB 	SW_P11,$
+		CALL 	DEBOUNCE
+		JMP 	LOOP
+
+_CHK12: 	JB 	SW_P12,_CHK13
+		DEC 	Count
+		CALL 	CHK_Under0
+		CALL 	DISPLAY
+		CALL 	DEBOUNCE
+		JNB 	SW_P12,$
+		CALL 	DEBOUNCE
+		JMP 	LOOP
+
+_CHK13: 	JB 	SW_P13,_CHK10
+		DEC 	Count
+		DEC 	Count
+		CALL 	CHK_Under0
+		CALL 	DISPLAY
+		CALL 	DEBOUNCE
+		JNB 	SW_P13,$
+		CALL 	DEBOUNCE
+		JMP 	LOOP
+	
+DISPLAY: 	MOV 	A,Count
+		MOV 	DPTR,#X_SEG
+		ANL 	A,#0FH
+		MOVC 	A,@A+DPTR
+		CPL 	A
+		MOV 	P0,A
+		SETB 	P1.4
+		CLR 	P1.5
+		RET
+		
+DEBOUNCE: 	PUSH 	B
+		PUSH 	Acc
+		CLR 	A
+		MOV 	B,A
+_DLY00: 	DJNZ 	Acc,_DLY00
+		DJNZ 	B,_DLY00
+		POP 	Acc
+		POP 	B
+		RET
+		
+CHK_Over9: 	PUSH 	Acc
+		PUSH 	PSW
+		MOV 	A,Count
+		CLR 	C
+		SUBB 	A,#10
+		JC 	_X_OV9
+		MOV 	Count,#9
+_X_OV9: 	POP 	PSW
+		POP 	Acc
+		RET
+		
+CHK_Under0: 	PUSH 	Acc
+		PUSH 	PSW
+		MOV 	A,Count
+		CLR	C
+		SUBB	A,#10
+		JC	_X_UN0
+		MOV 	Count,#0
+_X_UN0:		POP 	PSW
+		POP 	Acc
+		RET
+
+X_SEG: 		DB 77H, 11H, 6DH, 5DH
+		DB 1BH, 5EH, 7EH, 15H
+		DB 7FH, 5FH, 3FH, 7AH
+		DB 66H, 79H, 6EH, 2EH
+		
+		END
